@@ -1,31 +1,31 @@
 #include <iostream>
-#include<stack>
+#include<queue>
 
 using namespace std;
 
 class Graph {
-    private:
+private:
     bool** adjMatrix;
     int numVertices;
 
-    public:
-        // khởi tạo ma trận có tất cả phần tử bằng 0
-        Graph(int numVertices) {
-            this->numVertices = numVertices;
-            adjMatrix = new bool* [numVertices];
-            for (int i = 0; i < numVertices; i++) {
-                adjMatrix[i] = new bool[numVertices];
-                for (int j = 0; j < numVertices; j++)
-                    adjMatrix[i][j] = false;
-            }
+public:
+    // khởi tạo ma trận có tất cả phần tử bằng 0
+    Graph(int numVertices) {
+        this->numVertices = numVertices;
+        adjMatrix = new bool* [numVertices];
+        for (int i = 0; i < numVertices; i++) {
+            adjMatrix[i] = new bool[numVertices];
+            for (int j = 0; j < numVertices; j++)
+                adjMatrix[i][j] = false;
         }
+    }
     // thêm đỉnh
     void add_edge(int u, int v);
     // in ra ma trận 
     void Print_matrix();
-    
+
     //DFS
-    void Deep_first_search(int vertex_start);
+    void Breadth_first_search(int vertex_start);
 
     ~Graph() {
         for (int i = 0; i < numVertices; i++)
@@ -47,20 +47,20 @@ void Graph::Print_matrix() {
     cout << endl;
 }
 
-// Bài 2: câu a
-void Graph::Deep_first_search(int vertex_start)
+// Bài 3: câu a
+void Graph::Breadth_first_search(int vertex_start)
 {
-    stack<int> q;
+    queue<int> q;
     bool* visited = new bool[numVertices];
     for (int i = 0; i < numVertices; i++)
     {
         visited[i] = false;
     }
-    //đưa đỉnh đầu tiên vào stack
+    //đưa đỉnh đầu tiên vào queue
     q.push(vertex_start);
     // đặt đỉnh đã truy cập bằng true
     visited[vertex_start] = true;
-    
+
     int vis = NULL;
     while (!q.empty())
     {
@@ -68,15 +68,15 @@ void Graph::Deep_first_search(int vertex_start)
             if (q.empty())
                 break;
 
-            // lấy một đỉnh ra khỏi stack q để xét
-            vis = q.top();
-            // xóa đỉnh vừa lấy ra khỏi stack q
+            // lấy một đỉnh ra khỏi queue q để xét
+            vis = q.front();
+            // xóa đỉnh vừa lấy ra khỏi queue q
             q.pop();
         } while (visited[vis] == true);
-
+        
         // in ra đỉnh đang xét
         cout << vis << " ";
-        
+
         // đánh dấu vis đã duyệt qua
         visited[vis] = true;
 
@@ -85,7 +85,7 @@ void Graph::Deep_first_search(int vertex_start)
         {
             if (adjMatrix[vis][i] == 1 && !visited[i])
             {
-                q.push(i);  // đưa đỉnh chưa được duyệt vào stack
+                q.push(i);  // đưa đỉnh chưa được duyệt vào queue
             }
         }
     }
@@ -93,25 +93,25 @@ void Graph::Deep_first_search(int vertex_start)
 
     delete[] visited;
 }
-// Bài 2: câu b
+// Bài 3: câu b
 // Độ phức tạp về không gian: O(V*V)  (biểu diễn bằng ma trận kề)
 // Độ phức tạp về thời gian: O(V+E)
 
 int main()
 {
-    Graph graph(5);
-
+    Graph graph(8);
     graph.add_edge(0, 1);
     graph.add_edge(0, 2);
-    graph.add_edge(0, 3);
+    graph.add_edge(1, 2);
     graph.add_edge(1, 3);
-    graph.add_edge(1, 4);
-    graph.add_edge(2, 4);
+    graph.add_edge(2, 3);
+    graph.add_edge(2, 5);
+    graph.add_edge(3, 4);
+    graph.add_edge(7, 6);
 
     graph.Print_matrix();
-    
-    cout << "DFS: ";
-    graph.Deep_first_search(0);
+    cout <<"BFS: ";
+    graph.Breadth_first_search(0);
 
     return 0;
 }
